@@ -15,7 +15,7 @@ BreachRadar is an open-source Cyber Threat Intelligence (CTI) platform designed 
 
 # Suite Commands
 ### Microradar
-Swiss-army knife for credentials. BreachRadar compatible, minified Rust CLI tool. It contains all core functionality to ingest from a local directory and search Elastic using CLI.
+Swiss-army knife for credentials. A lightweight Rust CLI tool for local data ingestion and Elastic search using CLI, compatible with BreachRadar.
 
 ```bash
 # commands/microradar
@@ -25,7 +25,6 @@ cargo build --release
 ./microradar search <searchterm> # search elastic using CLI
 ./microradar scan <file> # scan file for credentials inside.
 ./microradar scan <file> --offline # do not use postgreSQL when scanning
-./microradar sync # synchronize patterns to postgreSQL
 ```
 
 # Running
