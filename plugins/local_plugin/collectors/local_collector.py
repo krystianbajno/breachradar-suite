@@ -12,7 +12,10 @@ class LocalCollector(PluginCollectorInterface):
         self.logger = logging.getLogger(__name__)
         self.local_service: LocalService = app.make('LocalService')
         self.repository: PostgresRepository = app.make('PostgresRepository')
-
+        
+    async def postprocess(self, scrap):
+        self.local_service.move_file_to_processed(scrap.file_path)
+        
     async def collect(self):
         scrape_files = await self.local_service.fetch_scrape_files()
         new_scraps = []
@@ -45,7 +48,7 @@ class LocalCollector(PluginCollectorInterface):
             )
 
             new_scraps.append(scrap)
-            
+                        
         return new_scraps
 
     def create_scrap(self, file_hash, filename, file_path, creation_time, occurrence_time):

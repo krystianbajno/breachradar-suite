@@ -138,3 +138,13 @@ class Config:
             }
                         
             return config
+        
+    def get_minio_config(self):
+        return {
+            "endpoint": self.get('minio.endpoint', 'localhost:9000'),
+            "access_key": self.get('minio.access_key', 'minioadmin'),
+            "secret_key": self.get('minio.secret_key', 'minioadmin'),
+            "secure": self.get('minio.secure', False),
+            "bucket_name": self.get('minio.bucket_name', 'scrapes'),
+            "region": self.get('minio.region', 'us-east-1'),
+        }

@@ -12,3 +12,4 @@ telethon
 asyncpg
 maturin
 aiokafka
+minio

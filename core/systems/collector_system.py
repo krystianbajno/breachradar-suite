@@ -4,14 +4,14 @@ import logging
 
 from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 from core.entities.scrap import Scrap
-from core.services.smb_service import move_file_to_upstream_smb
+from core.storage.storage_service import move_file_to_upstream
 
 class CollectorSystem:
     def __init__(self, app, collectors):
+        self.app = app
         self.logger = logging.getLogger(__name__)
         self.collectors = collectors
         self.kafka_config = app.configuration.get_kafka_config()
-        self.upstream_smb_config = app.configuration.get_upstream_smb_config()
         self.loop = asyncio.get_event_loop()
 
         self.producer = AIOKafkaProducer(
@@ -65,28 +65,29 @@ class CollectorSystem:
                         continue
 
                     self.processing_scraps.add(scrap.hash)
-                    smb_paths = move_file_to_upstream_smb(scrap.file_path, scrap.filename, self.upstream_smb_config)
+                    storage_info = move_file_to_upstream(scrap.file_path, scrap.filename, self.app.configuration)
 
-                    if smb_paths:
-                        await self._handle_new_scrap(scrap, smb_paths)
+                    if storage_info:
+                        await self._handle_new_scrap(scrap, storage_info)
+                        
+                await collector.postprocess(scrap)
 
             except Exception as e:
                 self.logger.exception(f"Error running collector {collector}: {e}")
 
-    async def _handle_new_scrap(self, scrap: Scrap, smb_paths: dict):
+    async def _handle_new_scrap(self, scrap: Scrap, storage_info: dict):
         try:
-            await self._publish_scrap(scrap, smb_paths)
+            await self._publish_scrap(scrap, storage_info)
         except Exception as e:
             self.logger.exception(f"Error handling new scrap {scrap.filename}: {e}")
         finally:
             self.processing_scraps.remove(scrap.hash)
 
-    async def _publish_scrap(self, scrap: Scrap, smb_paths: dict):
+    async def _publish_scrap(self, scrap: Scrap, storage_info: dict):
         try:
             message = {
                 "scrap_data": scrap.to_json(),
-                "mounted_path": smb_paths.get("mounted_path"),
-                "unc_path": smb_paths.get("unc_path")
+                "storage_info": storage_info
             }
 
             await self.producer.send_and_wait(self.topic, json.dumps(message).encode('utf-8'))

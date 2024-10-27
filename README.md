@@ -9,17 +9,24 @@
                                               Krystian Bajno 2024
 ```
 
-BreachRadar is an open-source Cyber Threat Intelligence (CTI) platform designed to collect and process data from various sources to detect potential security breaches and leaked credentials. It operates using Elasticsearch, PostgreSQL, SMB, and Kafka, with a custom Python framework built on an Entity-Component-System (ECS) architecture. The plugin-based system allows for integration of new collectors, processors, and data analysis tools.
+BreachRadar is an open-source Cyber Threat Intelligence (CTI) platform designed to collect and process data from various sources to detect potential security breaches and leaked credentials. It operates using Elasticsearch, PostgreSQL, SMB/min.io, and Kafka. The plugin-based system allows for integration of new collectors, processors, and data analysis tools.
 
 <img src="https://raw.githubusercontent.com/krystianbajno/krystianbajno/main/img/breachradar-arch.png"/>
 
-# Features
-- **Web Interface** - Provides a Web UI connected to ElasticSearch for searching data using keywords.
-- **Plugin Support** - It is possible to extend functionality by adding new collectors, processors, and analyzers as plugins.
-- **Event-Driven Processing** - Decouples collectors and processors using an event system.
-- **Data persistence** - Uses PostgreSQL and Elasticsearch.
-- **Credential Detection** - Uses regex patterns stored in a database to detect leaked credentials.
-- **Hashing and Tracking** - Hashes collected data and tracks origins based on the first occurrence of the same hash. Does not store same file twice, only a reference.
+# Suite Commands
+### Microradar
+Swiss-army knife for credentials. BreachRadar compatible, minified Rust CLI tool. It contains all core functionality to ingest from a local directory and search Elastic using CLI.
+
+```bash
+# commands/microradar
+cd commands/microradar
+cargo build --release
+./microradar ingest <input directory> # ingest data from selected directory
+./microradar search <searchterm> # search elastic using CLI
+./microradar scan <file> # scan file for credentials inside.
+./microradar scan <file> --offline # do not use postgreSQL when scanning
+./microradar sync # synchronize patterns to postgreSQL
+```
 
 # Running
 ### Plugin Installation
@@ -34,8 +41,8 @@ Copy the plugin into `plugins/` directory. The framework will detect and run it 
 1. Run `docker-compose up` to start Kafka, PostgreSQL, and ElasticSearch.
 2. Compile rust_bindings as they contain Rust PyO3, using `maturin build --release` and `pip install target/wheels/*.whl`.
 3. Compile plugins if needed, as they may contain Rust PyO3, using `maturin build --release` and `pip install target/wheels/*.whl`.
-3. Run `main.py` to setup the database, indexes, and start collection and processing services.
-4. Run `npm install`, `npm run build`, and `npm run start` in `webui/` directory to start Web UI service.
+4. Run `main.py` to setup the database, indexes, and start collection and processing services.
+5. Run `npm install`, `npm run build`, and `npm run start` in `webui/` directory to start Web UI service.
 
 You can distribute and scale these components on many machines in order to get a good performance through terabytes of data.
 
@@ -53,33 +60,10 @@ The core system consists of the following main components:
 - Collection and processing agent (`main.py`)
 - ElasticSearch - Stores processed data and provides powerful search capabilities.
 - Kafka - Is an event queue.
-- SMB Server - Hosts scrapes data to process.
+- min.io/SMB Server - Hosts scrapes data to process.
 - PostgreSQL - Stores scrap metadata, tracks processing.
 - WebUI - Allows to search and analyze data through a web interface connected to ElasticSearch.
 
-### WebUI
-- **WebUI** - Provides a `Next.js` based web UI connected to `ElasticSearch` for searching through data using keywords.
-
-### Core
-- **Core Processor** - Provides core functionalities like credential detection using regex patterns read from database and manages processing state.
-- **Event System** - Manages communication between components through events.
-- **Repositories** - Handles queries to PostgreSQL and Elasticsearch.
-- **Providers** - Manage the initialization and configuration of various system components and services.
-- **Migrations** - Manage the database migrations.
-
-### Plugins
-- **Collectors** - Gather data from corresponding source.
-- **Processors** - Process the collected data.
-- **Analyzers** - Perform deeper analysis on processed data in order to highlight what is affected (for example domains, or usernames, or emails) and take action, for example send notification on detection of breach containing the pattern.
-
-### Providers
-Providers are responsible for registering and bootstrapping services, systems, and other components within the application. They make managing dependencies easy.
-
-- **AppServiceProvider** - Registers core services like the event system, repositories, and core processors.
-- **AppSystemProvider** - Initializes and bootstraps systems like collectors and processors, loading plugins as needed.
-- **PluginProvider** - Base class for plugin providers; each plugin implements its own provider for registration.
-- **MigrationServiceProvider** - Handles database migrations to ensure the schema is up-to-date.
-- **AppEntityProvide** - Manages the registration of entities within the application.
 
 # Technical details for development
 ### In order to develop a plugin
@@ -91,31 +75,11 @@ Providers are responsible for registering and bootstrapping services, systems, a
 ### Plugin `Collectors` and `Processors`
 - Plugins can use `Core` components freely.
 - Collectors implement **PluginCollectorInterface** and must define a `collect` method.
+- Collectors implement **PluginCollectorInterface** and must define a `postprocess` method.
 - Processors implement **PluginProcessorInterface** with `can_process` and `process` methods.
 - Processors decide whether they can process a scrap based on `can_process`.
 
-# Data Flow
-### Event System
-- **EventSystem** class manages events.
-- Collectors trigger events like `SCRAP_COLLECTED`.
-- Processors listen for events and process scraps accordingly.
-
-### Collection
-- Collectors gather data and create `Scrap` objects.
-- Scraps are saved to PostgreSQL with state `PROCESSING`.
-- An event `SCRAP_COLLECTED` is triggered.
-
-### Processing
-- Processors receive `SCRAP_COLLECTED` events.
-- Process the scrap, then detect credentials using `CoreProcessor`.
-- Update the scrap's state in PostgreSQL.
-- Store processed data in Elasticsearch, and divide it into chunks, saving the reference in PostgreSQL.
-
-### Credential Detection
-- **CoreProcessor** loads regex patterns from the database and uses these patterns to search for credentials in content.
-
 # TODO in core
 - OpenCTI integration
-- TheHive integration
 - RecordedFuture integration
 - Implement analysis and `basic_analysis` plugin.

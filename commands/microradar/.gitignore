@@ -1,0 +1,4 @@
+target/
+src/patterns.rs
+data/
+patterns.db
