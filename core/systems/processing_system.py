@@ -7,10 +7,11 @@ import platform
 from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 from core.entities.scrap import Scrap
 from core.repositories.postgres_repository import PostgresRepository
-from core.services.smb_service import remove_file_from_smb
+from core.storage.storage_service import remove_file
 
 class ProcessingSystem:
     def __init__(self, app, processors, repository: PostgresRepository):
+        self.app = app
         self.logger = logging.getLogger(__name__)
         self.processors = processors
         self.repository = repository
@@ -50,12 +51,13 @@ class ProcessingSystem:
 
                         self.processing_scraps.add(scrap.hash)
                         
-                        file_path = self._get_platform_specific_path(scrap_data)
+                        storage_info = scrap_data.get('storage_info')
+
+                        file_path = self.retrieve_file(storage_info)
 
                         scrap.file_path = file_path
                         
-                        tasks.append(self.process_with_semaphore(scrap))
-                        remove_file_from_smb(file_path)
+                        tasks.append(self.process_with_semaphore(scrap, storage_info))
 
                 await asyncio.gather(*tasks)
                 await self.consumer.commit()
@@ -63,16 +65,29 @@ class ProcessingSystem:
             await self.consumer.stop()
             await self.producer.stop()
 
-    def _get_platform_specific_path(self, scrap_data):
-        if platform.system() == 'Windows':
-            return scrap_data.get('unc_path')
+    def retrieve_file(self, storage_info):
+        storage_provider = self.app.configuration.get('storage_provider', 'smb')
+        if storage_provider.lower() == 'smb':
+            if platform.system() == 'Windows':
+                return storage_info.get('unc_path')
+            else:
+                return storage_info.get('mounted_path')
+        elif storage_provider.lower() == 'minio':
+            bucket_name = storage_info.get('bucket_name')
+            object_name = storage_info.get('object_name')
+            temp_file_path = os.path.join('/tmp', object_name)
+            from core.storage.minio_service import download_file_from_minio
+            download_file_from_minio(bucket_name, object_name, temp_file_path, self.app.configuration.get_minio_config())
+            return temp_file_path
         else:
-            return scrap_data.get('mounted_path')
+            self.logger.error(f"Unsupported storage provider: {storage_provider}")
+            return None
 
-    async def process_with_semaphore(self, scrap):
+    async def process_with_semaphore(self, scrap, storage_info):
         async with self.semaphore:
             await self.process_scrap(scrap)
             self.processing_scraps.remove(scrap.hash)
+            remove_file(storage_info, self.app.configuration)
 
     async def process_scrap(self, scrap: Scrap):
         applicable_processors = [p for p in self.processors if p.can_process(scrap)]

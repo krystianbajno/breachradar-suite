@@ -1,0 +1,150 @@
+[
+    {
+        "pattern": "(?P<username>[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}):(?P<password>.*)",
+        "class": "CREDENTIAL"
+    },
+    {
+        "pattern": "(?P<username>[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})\\|(?P<password>.*)",
+        "class": "CREDENTIAL"
+    },
+    {
+        "pattern": "\\bpassword\\b\\s*[:=]\\s*(\\S+)",
+        "class": "CREDENTIAL"
+    },
+    {
+        "pattern": "\\bapi[_-]?key\\b\\s*[:=]\\s*['\"]?([a-zA-Z0-9_-]+)['\"]?",
+        "class": "API_KEY"
+    },
+    {
+        "pattern": "\\bsecret\\b\\s*[:=]\\s*['\"]?([a-zA-Z0-9]+)['\"]?",
+        "class": "SECRET"
+    },
+    {
+        "pattern": "\\baccess[_-]?token\\b\\s*[:=]\\s*['\"]?([a-zA-Z0-9_-]+)['\"]?",
+        "class": "TOKEN"
+    },
+    {
+        "pattern": "\\bcredit[_-]?card[_-]?number\\b\\s*[:=]\\s*(\\d{4}[- ]?\\d{4}[- ]?\\d{4}[- ]?\\d{4})",
+        "class": "PERSONAL_INFO"
+    },
+    {
+        "pattern": "\\b(ssn|social[_-]?security[_-]?number)\\b\\s*[:=]\\s*(\\d{3}-\\d{2}-\\d{4})",
+        "class": "PERSONAL_INFO"
+    },
+    {
+        "pattern": "\\b(?:aws[_-]?access[_-]?key[_-]?id|aws[_-]?secret[_-]?access[_-]?key)\\b\\s*[:=]\\s*['\"]?([A-Z0-9]+)['\"]?",
+        "class": "SECRET"
+    },
+    {
+        "pattern": "\\bdb[_-]?password\\b\\s*[:=]\\s*(\\S+)",
+        "class": "CREDENTIAL"
+    },
+    {
+        "pattern": "\\brsa[_-]?private[_-]?key\\b",
+        "class": "SECRET"
+    },
+    {
+        "pattern": "-----BEGIN PRIVATE KEY-----[\\s\\S]+-----END PRIVATE KEY-----",
+        "class": "SECRET"
+    },
+    {
+        "pattern": "-----BEGIN OPENSSH PRIVATE KEY-----",
+        "class": "SECRET"
+    },
+    {
+        "pattern": "-----BEGIN RSA PRIVATE KEY-----[\\s\\S]+-----END RSA PRIVATE KEY-----",
+        "class": "SECRET"
+    },
+    {
+        "pattern": "\\bclient[_-]?secret\\b\\s*[:=]\\s*['\"]?([a-zA-Z0-9-_]+)['\"]?",
+        "class": "SECRET"
+    },
+    {
+        "pattern": "\\bconnection[_-]?string\\b\\s*[:=]\\s*['\"]?(\\S+)['\"]?",
+        "class": "CREDENTIAL"
+    },
+    {
+        "pattern": "\\bpin\\b\\s*[:=]\\s*(\\d{4,6})",
+        "class": "PERSONAL_INFO"
+    },
+    {
+        "pattern": "\\btwilio[_-]?auth[_-]?token\\b\\s*[:=]\\s*['\"]?([a-zA-Z0-9]+)['\"]?",
+        "class": "API_KEY"
+    },
+    {
+        "pattern": "\\bgithub[_-]?token\\b\\s*[:=]\\s*['\"]?([a-zA-Z0-9_-]+)['\"]?",
+        "class": "TOKEN"
+    },
+    {
+        "pattern": "\\bpersonal[_-]?access[_-]?token\\b\\s*[:=]\\s*['\"]?([a-zA-Z0-9_-]+)['\"]?",
+        "class": "TOKEN"
+    },
+    {
+        "pattern": "\\bslack[_-]?token\\b\\s*[:=]\\s*['\"]?([a-zA-Z0-9-]+)['\"]?",
+        "class": "TOKEN"
+    },
+    {
+        "pattern": "\\bmailgun[_-]?api[_-]?key\\b\\s*[:=]\\s*['\"]?([a-zA-Z0-9-]+)['\"]?",
+        "class": "API_KEY"
+    },
+    {
+        "pattern": "\\bpagerduty[_-]?token\\b\\s*[:=]\\s*['\"]?([a-zA-Z0-9]+)['\"]?",
+        "class": "TOKEN"
+    },
+    {
+        "pattern": "\\bprivate[_-]?key\\b\\s*[:=]\\s*['\"]?([a-zA-Z0-9/+=]+)['\"]?",
+        "class": "SECRET"
+    },
+    {
+        "pattern": "\\bconsumer[_-]?secret\\b\\s*[:=]\\s*['\"]?([a-zA-Z0-9-_]+)['\"]?",
+        "class": "SECRET"
+    },
+    {
+        "pattern": "\\boauth[_-]?token[_-]?secret\\b\\s*[:=]\\s*['\"]?([a-zA-Z0-9-_]+)['\"]?",
+        "class": "TOKEN"
+    },
+    {
+        "pattern": "\\bmaster[_-]?key\\b\\s*[:=]\\s*['\"]?([a-zA-Z0-9-_]+)['\"]?",
+        "class": "API_KEY"
+    },
+    {
+        "pattern": "\\bbearer[_-]?token\\b\\s*[:=]\\s*['\"]?([a-zA-Z0-9-]+)['\"]?",
+        "class": "TOKEN"
+    },
+    {
+        "pattern": "\\btoken\\b\\s*[:=]\\s*['\"]?([a-zA-Z0-9-_]+)['\"]?",
+        "class": "TOKEN"
+    },
+    {
+        "pattern": "\\bapi[_-]?secret\\b\\s*[:=]\\s*['\"]?([a-zA-Z0-9-_]+)['\"]?",
+        "class": "API_KEY"
+    },
+    {
+        "pattern": "\\bssn\\b[:=]?\\s*(\\d{3}-\\d{2}-\\d{4})",
+        "class": "PERSONAL_INFO"
+    },
+    {
+        "pattern": "\\busername\\b\\s*[:=]\\s*['\"]?([a-zA-Z0-9._-]+)['\"]?",
+        "class": "CREDENTIAL"
+    },
+    {
+        "pattern": "\\buser\\b\\s*[:=]\\s*['\"]?([a-zA-Z0-9._-]+)['\"]?",
+        "class": "CREDENTIAL"
+    },
+    {
+        "pattern": "\\bid[_-]?token\\b\\s*[:=]\\s*['\"]?([a-zA-Z0-9._-]+)['\"]?",
+        "class": "TOKEN"
+    },
+    {
+        "pattern": "\\brefresh[_-]?token\\b\\s*[:=]\\s*['\"]?([a-zA-Z0-9._-]+)['\"]?",
+        "class": "TOKEN"
+    },
+    {
+        "pattern": "\\bjson[_-]?web[_-]?token\\b\\s*[:=]\\s*['\"]?([a-zA-Z0-9._-]+)['\"]?",
+        "class": "TOKEN"
+    },
+    {
+        "pattern": "^(?P<key>[A-Z0-9_\\.]+)=(?P<value>.*)$",
+        "class": "SECRET"
+    }
+]

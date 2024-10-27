@@ -63,23 +63,60 @@ services:
     networks:
       - cti_network
 
-  samba:
-    image: dperson/samba
-    container_name: samba-server
-    ports:
-      - "139:139"
-      - "445:445"
-    volumes:
-      - ./data/samba_share:/mount
+  # samba:
+  #   image: dperson/samba
+  #   container_name: samba-server
+  #   ports:
+  #     - "139:139"
+  #     - "445:445"
+  #   volumes:
+  #     - ./data/samba_share:/mount
+  #   environment:
+  #     - USERID=${SAMBA_USERID}
+  #     - GROUPID=${SAMBA_GROUPID}
+  #     - SAMBA_USER=${UPSTREAM_SMB__USERNAME}
+  #     - SAMBA_PASSWORD=${UPSTREAM_SMB__PASSWORD}
+  #   command: >
+  #     -u "${UPSTREAM_SMB__USERNAME};${UPSTREAM_SMB__PASSWORD}"
+  #     -s "share;/mount;yes;no;yes;all;none;0777"
+  #     -g "server min protocol = SMB2"
+  #   networks:
+  #     - cti_network
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
     environment:
-      - USERID=${SAMBA_USERID}
-      - GROUPID=${SAMBA_GROUPID}
-      - SAMBA_USER=${UPSTREAM_SMB__USERNAME}
-      - SAMBA_PASSWORD=${UPSTREAM_SMB__PASSWORD}
-    command: >
-      -u "${UPSTREAM_SMB__USERNAME};${UPSTREAM_SMB__PASSWORD}"
-      -s "share;/mount;yes;no;yes;all;none;0777"
-      -g "server min protocol = SMB2"
+      MINIO_ROOT_USER: ${MINIO__ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO__SECRET_KEY}
+    volumes:
+      - minio_data:/data
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    command: server /data --console-address ":9001"
+    networks:
+      cti_network:
+        aliases:
+          - minio
+
+  minio_setup:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      while ! mc alias set myminio http://minio:9000 ${MINIO__ACCESS_KEY} ${MINIO__SECRET_KEY}; do
+        echo 'Waiting for MinIO...';
+        sleep 5;
+      done;
+      mc mb myminio/${MINIO__BUCKET_NAME} || true;
+      mc anonymous set public myminio/${MINIO__BUCKET_NAME}
+      "
+    environment:
+      MINIO_ACCESS_KEY: ${MINIO__ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO__SECRET_KEY}
+      MINIO_BUCKET_NAME: ${MINIO__BUCKET_NAME}
     networks:
       - cti_network
 
@@ -87,6 +124,7 @@ volumes:
   postgres_data:
   es_data:
   samba_share:
+  minio_data:
 
 networks:
   cti_network:

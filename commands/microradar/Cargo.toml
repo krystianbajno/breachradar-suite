@@ -1,0 +1,32 @@
+[package]
+name = "microradar"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "microradar"
+path = "main.rs"
+
+[lib]
+name = "microradar"
+path = "src/lib.rs"
+
+[dependencies]
+colored = "2.0"
+tokio = { version = "1", features = ["full"] }
+tokio-postgres = "0.7"
+dotenv = "0.15"
+sha2 = "0.10"
+regex = "1"
+elasticsearch = "8.15.0-alpha.1"
+rusqlite = "0.32"
+walkdir = "2.3"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+futures = "0.3"
+clap = { version = "4.0", features = ["derive"] }
+
+[build-dependencies]
+rusqlite = "0.32.1"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"

@@ -35,3 +35,13 @@ upstream_smb:
   username: smbuser1
   password: smbpassword1
   mount_point: /mnt/smb_scraps1
+
+storage_provider: minio
+
+minio:
+  endpoint: 'localhost:9000'
+  access_key: 'minioadmin'
+  secret_key: 'minioadmin'
+  bucket_name: 'scraps'
+  secure: false
+  region: 'us-east-1'

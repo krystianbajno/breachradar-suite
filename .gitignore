@@ -4,6 +4,8 @@ data/postgres_data/
 data/es_data/
 data/samba_share/
 data/local_ingest_processed/
+data/minio_data/
+
 venv
 
 commands/breachradar-micro/data/data-processed

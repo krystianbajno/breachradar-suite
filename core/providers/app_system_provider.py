@@ -1,6 +1,6 @@
 from core.events.event_system import EventSystem
 from core.plugins.plugin_loader import PluginLoader
-from core.services.smb_service import mount_downstream_smb, mount_upstream_smb
+from core.storage.smb_service import mount_downstream_smb, mount_upstream_smb
 from core.systems.collector_system import CollectorSystem
 from core.systems.processing_system import ProcessingSystem
 
