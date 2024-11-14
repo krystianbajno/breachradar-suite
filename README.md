@@ -1,5 +1,6 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/krystianbajno/breachradar-suite/badge)](https://www.codefactor.io/repository/github/krystianbajno/breachradar-suite)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/349279ed04b94323928355065a9ede7f)](https://app.codacy.com/gh/krystianbajno/breachradar-suite/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fkrystianbajno%2Fbreachradar-suite.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fkrystianbajno%2Fbreachradar-suite?ref=badge_shield)
 
 # BreachRadar
 ```
@@ -85,3 +86,7 @@ The core system consists of the following main components:
 - OpenCTI integration
 - RecordedFuture integration
 - Implement analysis and `basic_analysis` plugin.
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fkrystianbajno%2Fbreachradar-suite.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fkrystianbajno%2Fbreachradar-suite?ref=badge_large)
