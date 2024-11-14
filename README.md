@@ -1,6 +1,7 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/krystianbajno/breachradar-suite/badge)](https://www.codefactor.io/repository/github/krystianbajno/breachradar-suite)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/349279ed04b94323928355065a9ede7f)](https://app.codacy.com/gh/krystianbajno/breachradar-suite/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fkrystianbajno%2Fbreachradar-suite.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fkrystianbajno%2Fbreachradar-suite?ref=badge_shield)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fkrystianbajno%2Fbreachradar-suite.svg?type=shield&issueType=security)](https://app.fossa.com/projects/git%2Bgithub.com%2Fkrystianbajno%2Fbreachradar-suite?ref=badge_shield&issueType=security)
 
 # BreachRadar
 ```
