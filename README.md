@@ -1,3 +1,5 @@
+[![CodeFactor](https://www.codefactor.io/repository/github/krystianbajno/breachradar-suite/badge)](https://www.codefactor.io/repository/github/krystianbajno/breachradar-suite)
+
 # BreachRadar
 ```
     ____                       __    ____            __          
