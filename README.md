@@ -1,4 +1,5 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/krystianbajno/breachradar-suite/badge)](https://www.codefactor.io/repository/github/krystianbajno/breachradar-suite)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/349279ed04b94323928355065a9ede7f)](https://app.codacy.com/gh/krystianbajno/breachradar-suite/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 # BreachRadar
 ```
