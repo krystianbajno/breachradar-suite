@@ -1,4 +1,7 @@
 # BreachRadar
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2faa2f4e41c3484e8269b490d7004058)](https://app.codacy.com/gh/krystianbajno/breachradar-suite?utm_source=github.com&utm_medium=referral&utm_content=krystianbajno/breachradar-suite&utm_campaign=Badge_Grade)
+
 ```
     ____                       __    ____            __          
    / __ )________  ____ ______/ /_  / __ \____ _____/ /___ ______
